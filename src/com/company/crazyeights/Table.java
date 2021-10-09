@@ -5,6 +5,7 @@ import com.company.deck.Card;
 import com.company.deck.Deck;
 import com.company.deck.StandardDeck;
 import com.company.utils.Console;
+import com.company.crazyeights.Hand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class Table {
     //private List<Actor> players = new ArrayList<>();
     private Card activeCard;
     private Deck deck;
+    private Card userSelectedCard;
 
 
     public Table() {
@@ -26,40 +28,68 @@ public class Table {
         }
     }
 
-//    public void playGame() {
-//        while (true) {
-//            playRound();
-//        }
-//    }
 
-    public void playRound() {
+    public void playGame() {
         deck.shuffle();
         deal();
-        displayTable();
         flipTopCard();
-        turn();
-        endRound();
+        while(playTurn());
     }
 
-    private void turn() {
+    private boolean playTurn(){
+       return turn();
+    }
+
+    private boolean turn() {
         for (Hand activeHand : hands) {
+            System.out.println(activeHand.getName() + " " + activeHand.displayHand() + " | ");
             int result = activeHand.getAction(activeCard);
             if (result == 1) {
                 activeHand.addCard(deck.draw());
-                displayTable();
+                System.out.println(activeHand.getName() + " " + activeHand.displayHand() + " | ");
+
             } else {
-                activeCard = activeHand.removeCard(0);
-                System.out.println("Deck Card: " + activeCard);
+                int num = Console.getInt("Select a card 0 through " + (activeHand.size() -1), 0, activeHand.size() - 1,
+                        "Enter " +
+                                "valid " +
+                                "number");
+                userSelectedCard = activeHand.getCard(num);
+                validCard();
+                activeCard= activeHand.removeCard(num);
+                System.out.println(activeHand.getName() + " " + activeHand.displayHand() + " | ");
+                System.out.println("Card in Play: " + activeCard.display());
+
             }
+        if(activeHand.size() == 0){
+            System.out.println(activeHand.getName() + " is the Winner");
+            return false;
+        }
+        }
+        return true;
+    }
+
+
+
+    private void validCard() {
+        if (activeCard.getRank() == userSelectedCard.getRank() || activeCard.getSuit().equals( userSelectedCard.getSuit())){
+            activeCard = userSelectedCard;
+        } else {
+            System.out.println("*******Invalid Card*******");
+            System.out.println("You picked " + userSelectedCard);
+            System.out.println("Please pick another card from your hand or Draw a card.");
+            displayActiveHand();
+            System.out.println("Card in Play: " + activeCard.display());
+            turn();
         }
     }
 
-    private void displayTable() {
+    private void displayActiveHand() {
         StringBuilder output = new StringBuilder();
         for (Hand activeHand : hands) {
             output.append(activeHand.getName()).append(" | ").append(activeHand.displayHand()).append(" | ");
         }
         System.out.println(output);
+
     }
 
     private void endRound() {
@@ -69,7 +99,7 @@ public class Table {
     }
 
     private void deal() {
-        for (int count = 0; count < 5; count++) {
+        for (int count = 0; count < 1; count++) {
             for (Hand activeHand : hands) {
                 activeHand.addCard(deck.draw());
             }
@@ -83,7 +113,7 @@ public class Table {
 
     private void flipTopCard() {
         activeCard = deck.draw();
-        System.out.println("Deck Card: " + activeCard);
+        System.out.println("Card in Play: " + activeCard.display());
     }
 
 //    private boolean turn(Hand activeHand) {

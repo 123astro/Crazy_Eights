@@ -25,7 +25,6 @@ public class Hand {
         return output.toString().trim();
     }
 
-
     public int getAction(Card activeCard) {
         return player.getAction(activeCard, cards);
     }
@@ -34,18 +33,20 @@ public class Hand {
         return cards.size();
     }
 
-
     public String getName() {
         return player.getName();
     }
 
 
     public Card removeCard(int index) {
-        // take card at index out of hand and return to table
         return cards.remove(index);
     }
 
     public void discardHand() {
         cards.clear();
+    }
+
+    public Card getCard(int index){
+        return cards.get(index);
     }
 }
