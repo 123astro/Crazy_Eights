@@ -13,10 +13,10 @@ import java.util.List;
 public class Table {
 
     private List<Hand> hands = new ArrayList<>();
-    //private List<Actor> players = new ArrayList<>();
     private Card activeCard;
     private Deck deck;
     private Card userSelectedCard;
+    private Card trackFirstCard;
 
 
     public Table() {
@@ -28,74 +28,67 @@ public class Table {
         }
     }
 
-
     public void playGame() {
         deck.shuffle();
         deal();
-        flipTopCard();
-        while(playTurn());
+        getCardInPlay();
+        while (turn()) ;
     }
 
-    private boolean playTurn(){
-       return turn();
-    }
+//    private void testForFirstCard(){
+//        if(trackFirstCard == activeCard) {
+//        }
+//    }
 
     private boolean turn() {
         for (Hand activeHand : hands) {
-            System.out.println(activeHand.getName() + " " + activeHand.displayHand() + " | ");
+            System.out.println(activeHand.getName() + " |" + " " + activeHand.displayHand() + " | ");
+            System.out.println("Card in Play: " + activeCard.display());
             int result = activeHand.getAction(activeCard);
             if (result == 1) {
                 activeHand.addCard(deck.draw());
                 System.out.println(activeHand.getName() + " " + activeHand.displayHand() + " | ");
-
+                for (int i = 0; i < 8; i++) {
+                    System.out.println();
+                }
             } else {
-                int num = Console.getInt("Select a card 0 through " + (activeHand.size() -1), 0, activeHand.size() - 1,
-                        "Enter " +
-                                "valid " +
-                                "number");
-                userSelectedCard = activeHand.getCard(num);
-                validCard();
-                activeCard= activeHand.removeCard(num);
-                System.out.println(activeHand.getName() + " " + activeHand.displayHand() + " | ");
-                System.out.println("Card in Play: " + activeCard.display());
-
+                int num;
+                boolean result2;
+                do {
+                    num = Console.getInt("Select a card 1 through " + (activeHand.size()), 1,
+                            activeHand.size(),
+                            "Enter " +
+                                    "valid " +
+                                    "number");
+                    num--;
+                    userSelectedCard = activeHand.getCard(num);
+                    result2 =  validCard();
+                } while (result2);
+                activeCard = activeHand.removeCard(num);
+                System.out.println(activeHand.getName() + " |" + " " + activeHand.displayHand() + " | ");
+                for (int i = 0; i < 8; i++) {
+                    System.out.println();
+                }
             }
-        if(activeHand.size() == 0){
-            System.out.println(activeHand.getName() + " is the Winner");
-            return false;
-        }
+            if (activeHand.size() == 0) {
+                System.out.println(activeHand.getName() + " is the Winner");
+                return false;
+            }
         }
         return true;
     }
 
 
-
-    private void validCard() {
-        if (activeCard.getRank() == userSelectedCard.getRank() || activeCard.getSuit().equals( userSelectedCard.getSuit())){
+    private boolean validCard() {
+        if (activeCard.getRank() == userSelectedCard.getRank() || activeCard.getSuit().equals(userSelectedCard.getSuit())) {
             activeCard = userSelectedCard;
+            return false;
         } else {
             System.out.println("*******Invalid Card*******");
-            System.out.println("You picked " + userSelectedCard);
+            System.out.println("You picked " + userSelectedCard.display());
             System.out.println("Please pick another card from your hand or Draw a card.");
-            displayActiveHand();
-            System.out.println("Card in Play: " + activeCard.display());
-            turn();
         }
-    }
-
-    private void displayActiveHand() {
-        StringBuilder output = new StringBuilder();
-        for (Hand activeHand : hands) {
-            output.append(activeHand.getName()).append(" | ").append(activeHand.displayHand()).append(" | ");
-        }
-        System.out.println(output);
-
-    }
-
-    private void endRound() {
-        for (Hand player : hands) {
-            player.discardHand();
-        }
+        return true;
     }
 
     private void deal() {
@@ -106,21 +99,10 @@ public class Table {
         }
     }
 
-
-    private void determineWinner() {
-
-    }
-
-    private void flipTopCard() {
+    private void getCardInPlay() {
         activeCard = deck.draw();
-        System.out.println("Card in Play: " + activeCard.display());
+        trackFirstCard = activeCard;
     }
-
-//    private boolean turn(Hand activeHand) {
-//        byte action = activeHand.getAction(dealer);
-//        if () {
-//        }
-//    }
 
     private boolean quit() {
         System.exit(0);
