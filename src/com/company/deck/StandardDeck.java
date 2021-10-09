@@ -24,4 +24,8 @@ public class StandardDeck implements Deck {
     public Card draw() {  // return a card from cards list. Datatype Card
         return cards.remove(cards.size() - 1); // grab from the last position in the list and return with remove
     }
+
+    public int size(){
+        return cards.size();
+    }
 }
