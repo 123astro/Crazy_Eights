@@ -28,4 +28,12 @@ public class StandardDeck implements Deck {
     public int size(){
         return cards.size();
     }
+
+    public void addCardToDeck(Card oldCard){
+        cards.add(0,oldCard);
+    }
+
+    public void displayDeck(){
+        System.out.println(cards);
+    }
 }

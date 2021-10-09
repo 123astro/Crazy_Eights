@@ -16,7 +16,6 @@ public class Table {
     private Card activeCard;
     private Deck deck;
     private Card userSelectedCard;
-    private Card trackFirstCard;
     private int counter;
 
 
@@ -29,12 +28,8 @@ public class Table {
         }
     }
 
-    public int startingDeckSize(){
-        return counter = deck.size();
-    }
 
     public void playGame() {
-        startingDeckSize();
         System.out.println("Deck size: " + counter);
         deck.shuffle();
         deal();
@@ -55,6 +50,10 @@ public class Table {
             if (result == 1) {
                 activeHand.addCard(deck.draw());
                 counter--;
+                checkDeckSize();
+                deck.displayDeck();
+                System.out.println("counter " + counter);
+                System.out.println(deck.size());
                 System.out.println(activeHand.getName() + " " + activeHand.displayHand() + " | ");
                 for (int i = 0; i < 8; i++) {
                     System.out.println();
@@ -70,10 +69,15 @@ public class Table {
                                     "number");
                     num--;
                     userSelectedCard = activeHand.getCard(num);
-                    result2 =  validCard();
+                    result2 = validCard();
                 } while (result2);
                 activeCard = activeHand.removeCard(num);
+                deck.addCardToDeck(activeCard);
+                deck.displayDeck();
+                System.out.println(deck.size());
+                System.out.println("counter " + counter);
                 counter--;
+                checkDeckSize();
                 System.out.println(activeHand.getName() + " |" + " " + activeHand.displayHand() + " | ");
                 for (int i = 0; i < 8; i++) {
                     System.out.println();
@@ -102,23 +106,23 @@ public class Table {
     }
 
     private void deal() {
-        for (int count = 0; count < 1; count++) {
+        for (int count = 0; count < 5; count++) {
             for (Hand activeHand : hands) {
                 activeHand.addCard(deck.draw());
                 counter--;
+                checkDeckSize();
             }
         }
     }
 
     private void getCardInPlay() {
         activeCard = deck.draw();
-        trackFirstCard = activeCard;
         counter--;
-
+        checkDeckSize();
     }
 
-    private void checkDeckSize(){
-        if(counter == 1){
+    private void checkDeckSize() {
+        if (counter < 1) {
             deck.shuffle();
         }
     }
@@ -128,6 +132,9 @@ public class Table {
         return false;
     }
 
+//    public int startingDeckSize() {
+//        return counter = deck.size();
+//    }
 
 }
 
