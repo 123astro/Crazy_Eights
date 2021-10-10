@@ -5,18 +5,18 @@ import com.company.deck.Card;
 import com.company.deck.Deck;
 import com.company.deck.StandardDeck;
 import com.company.utils.Console;
-import com.company.crazyeights.Hand;
+import com.sun.tools.jconsole.JConsoleContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Table {
 
-    private List<Hand> hands = new ArrayList<>();
+    private List<Hand> hands = new ArrayList<>(); //Hand has a player
     private Card activeCard;
     private Deck deck;
     private Card userSelectedCard;
-    private int counter;
+    private int counter = 52;
 
 
     public Table() {
@@ -28,19 +28,13 @@ public class Table {
         }
     }
 
-
     public void playGame() {
-        System.out.println("Deck size: " + counter);
         deck.shuffle();
         deal();
-        getCardInPlay();
+        firstCardinPlay();
         while (turn()) ;
     }
 
-//    private void testForFirstCard(){
-//        if(trackFirstCard == activeCard) {
-//        }
-//    }
 
     private boolean turn() {
         for (Hand activeHand : hands) {
@@ -52,9 +46,7 @@ public class Table {
                 counter--;
                 checkDeckSize();
                 deck.displayDeck();
-                System.out.println("counter " + counter);
-                System.out.println(deck.size());
-                System.out.println(activeHand.getName() + " " + activeHand.displayHand() + " | ");
+                System.out.println(activeHand.getName() + " " + "| " + activeHand.displayHand() + " | ");
                 for (int i = 0; i < 8; i++) {
                     System.out.println();
                 }
@@ -69,15 +61,21 @@ public class Table {
                                     "number");
                     num--;
                     userSelectedCard = activeHand.getCard(num);
+                    if (userSelectedCard.getRank() == 8) {
+                        int newSuit = Console.getInt("Choose a suit:\n1. Clubs\n2. Spades\n3. Hearts\n4. Diamonds ", 1,
+                                4 ,
+                                "Invalid");
+
+                       // newEightSuit =
+                        // change suit of Card in play.
+                    }
                     result2 = validCard();
                 } while (result2);
                 activeCard = activeHand.removeCard(num);
-                deck.addCardToDeck(activeCard);
-                deck.displayDeck();
-                System.out.println(deck.size());
-                System.out.println("counter " + counter);
+                deck.addCardToDeck(activeCard); // add card back to deck
+                deck.displayDeck(); // debug
                 counter--;
-                checkDeckSize();
+                checkDeckSize(); // in the case no one is discarding cards.
                 System.out.println(activeHand.getName() + " |" + " " + activeHand.displayHand() + " | ");
                 for (int i = 0; i < 8; i++) {
                     System.out.println();
@@ -101,8 +99,8 @@ public class Table {
             System.out.println("You picked " + userSelectedCard.display());
             System.out.println("Please pick another card from your hand or Draw a card.");
             turn();
+            return true;
         }
-        return true;
     }
 
     private void deal() {
@@ -115,21 +113,20 @@ public class Table {
         }
     }
 
-    private void getCardInPlay() {
+    private void firstCardinPlay() {
         activeCard = deck.draw();
         counter--;
         checkDeckSize();
     }
 
     private void checkDeckSize() {
-        if (counter < 1) {
+        if (deck.size() == 0) {
+            System.out.println(" Game over due to players holding cards!");
+            System.exit(0);
+        }
+        if (counter == 1) {
             deck.shuffle();
         }
-    }
-
-    private boolean quit() {
-        System.exit(0);
-        return false;
     }
 
 //    public int startingDeckSize() {
