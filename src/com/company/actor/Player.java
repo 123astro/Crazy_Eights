@@ -24,7 +24,7 @@ public class Player implements Actor {
 
     @Override
     public int getAction(Card activeCard, List<Card> cards) {
-       return Console.getInt("1. Draw?\n2. Play a card?", 1,2, "Please enter a valid number!");
+       return Console.getInt("1. Draw?\n2. Play a card?\n3. Quit", 1,3, "Please enter a valid number!");
     }
 
 
