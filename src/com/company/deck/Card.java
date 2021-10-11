@@ -5,12 +5,9 @@ public class Card {
     protected String suit;
     protected int rank;
 
-    //    protected boolean isFaceDown = true;
-//
     public Card(String suit, int rank) {
         this.suit = suit;
         this.rank = rank;
-
     }
 
     public int getRank() {
@@ -35,11 +32,5 @@ public class Card {
         }
         return output + suit;
     }
-//    public void flip(){
-//        isFaceDown = !isFaceDown;
-//    }
-//    public boolean isFaceDown(){
-//        return isFaceDown;
-//    }
 }
 

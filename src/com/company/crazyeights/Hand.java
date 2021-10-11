@@ -37,20 +37,12 @@ public class Hand {
         return player.getName();
     }
 
-
     public Card removeCard(int index) {
         return cards.remove(index);
-    }
-
-    public void discardHand() {
-        cards.clear();
     }
 
     public Card getCard(int index){
         return cards.get(index);
     }
 
-//    public List<Card> getCards(){
-//        return cards;
-//    }
 }

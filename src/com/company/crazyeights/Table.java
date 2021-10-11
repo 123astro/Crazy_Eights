@@ -19,7 +19,6 @@ public class Table {
     private Card userSelectedCard;
     private int counter;
 
-
     public Table() {
         deck = new StandardDeck();
         int playerCount = Console.getInt("How many players?", 1, 5, "invalid player selection");
@@ -55,9 +54,8 @@ public class Table {
                     counter--;
                     activeHand.addCard(deck.draw());
                     checkDeckSize();
-                    // deck.displayDeck();
                     System.out.println(activeHand.getName() + " " + "| " + activeHand.displayHand() + " | ");
-                    for (int i = 0; i < 4; i++) {
+                    for (int i = 0; i < 3; i++) {
                         System.out.println();
                     }
                     result2 = false;
@@ -83,11 +81,8 @@ public class Table {
                     if (userSelectedCard.getSuit().equals(activeCard.getSuit()) && activeCard.getRank() == 8 && userSelectedCard.getRank() != 8) {
                         activeHand.removeCard(num);
                         activeCard = userSelectedCard;
-                        System.out.println("test case 1");
-                        counter--;
                     }
                     result2 = validCard();
-                    deck.displayDeck();
                     checkDeckSize(); // in the case no one is discarding cards. edge case
                     System.out.println(activeHand.getName() + " |" + " " + activeHand.displayHand() + " | ");
                     for (int i = 0; i < 4; i++) {
@@ -108,8 +103,9 @@ public class Table {
     }
 
     private boolean validCard() {
-        if (activeCard.getRank() == userSelectedCard.getRank() || activeCard.getSuit().equals(userSelectedCard.getSuit()) || crazyEightCard.getSuit().equals(userSelectedCard.getSuit())) {
-//            activeCard = userSelectedCard;
+        if (activeCard.getRank() == userSelectedCard.getRank() ||
+                activeCard.getSuit().equals(userSelectedCard.getSuit()) ||
+                crazyEightCard.getSuit().equals(userSelectedCard.getSuit())) {
             return false;
         } else if (!Objects.equals(activeCard.getSuit(), userSelectedCard.getSuit())) {
             System.out.println("*******Invalid Card*******");
@@ -142,7 +138,10 @@ public class Table {
             System.exit(0);
         }
         if (counter == 1) {
+            deck.displayDeck();
             deck.shuffle();
+            deck.displayDeck();
+            counter = deck.size();
             System.out.println("***********************A re-shuffle has happened.****************************");
         }
     }
@@ -159,7 +158,6 @@ public class Table {
                 }
                 activeCard = activeHand.removeCard(num);
                 deck.addCardToDeck(activeCard);
-                System.out.println(" 8\u2667");
                 crazyEightCard = new Card("\u2667", 8);
                 activeCard = crazyEightCard;
             }
@@ -170,7 +168,6 @@ public class Table {
                 }
                 activeCard = activeHand.removeCard(num);
                 deck.addCardToDeck(activeCard);
-                System.out.println(" 8\u2664");
                 crazyEightCard = new Card("\u2664", 8);
                 activeCard = crazyEightCard;
             }
@@ -181,7 +178,6 @@ public class Table {
                 }
                 activeCard = activeHand.removeCard(num);
                 deck.addCardToDeck(activeCard);
-                System.out.println(" 8\u2665");
                 crazyEightCard = new Card("\u2665", 8);
                 activeCard = crazyEightCard;
             }
@@ -192,7 +188,6 @@ public class Table {
                 }
                 activeCard = activeHand.removeCard(num);
                 deck.addCardToDeck(activeCard);
-                System.out.println(" 8\u2666");
                 crazyEightCard = new Card("\u2666", 8);
                 activeCard = crazyEightCard;
             }
