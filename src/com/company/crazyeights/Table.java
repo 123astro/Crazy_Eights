@@ -12,9 +12,10 @@ import java.util.Objects;
 
 public class Table {
 
-    private List<Hand> hands = new ArrayList<>(); //Hand has a player
+    private final List<Hand> hands = new ArrayList<>(); //Hand has a player
+    private Card crazyEightCard;
     private Card activeCard;
-    private Deck deck;
+    private final Deck deck;
     private Card userSelectedCard;
     private int counter;
 
@@ -26,6 +27,7 @@ public class Table {
             Player newPlayer = new Player("Player" + (count + 1)); //create new player 1 thru 6
             hands.add(new Hand(newPlayer)); // instantiating a hand for the new player and adding to the list
         }
+
     }
 
     public void playGame() {
@@ -33,21 +35,27 @@ public class Table {
         deck.shuffle();
         deal();
         firstCardinPlay();
-        while (turn());
+        crazyEightCard = new Card("u2664", 1);
+        while (turn()) ;
     }
 
     private boolean turn() {
         for (Hand activeHand : hands) {
             boolean result2 = true;
+            //deck.displayDeck();
             do {
                 System.out.println(activeHand.getName() + " |" + " " + activeHand.displayHand() + " | ");
-                System.out.println("Card in Play: " + activeCard.display());
+                if (activeCard.getRank() == 8 && crazyEightCard.getSuit() != activeCard.getSuit()) {
+                    System.out.println("Card in Play: " + crazyEightCard.display());
+                } else {
+                    System.out.println("Card in Play: " + activeCard.display());
+                }
                 int result = activeHand.getAction(activeCard);
                 if (result == 1) {
                     counter--;
                     activeHand.addCard(deck.draw());
                     checkDeckSize();
-                   // deck.displayDeck();
+                    // deck.displayDeck();
                     System.out.println(activeHand.getName() + " " + "| " + activeHand.displayHand() + " | ");
                     for (int i = 0; i < 4; i++) {
                         System.out.println();
@@ -62,25 +70,31 @@ public class Table {
                                     "number");
                     num--;
                     userSelectedCard = activeHand.getCard(num);
-                    if (userSelectedCard.getRank() == 8) {
-                        int newSuit = Console.getInt("Choose a suit:\n1. Clubs\n2. Spades\n3. Hearts\n4. Diamonds ", 1,
-                                4,
-                                "Invalid");
-                    }
-                        result2 = validCard();
-                    if (userSelectedCard.getSuit() == activeCard.getSuit()) {
-                        activeCard = activeHand.removeCard(num);
+                    checkEights(activeHand, num);
+
+                    if ((userSelectedCard.getSuit().equals(activeCard.getSuit()) && activeCard.getRank() != 8) ||
+                            (userSelectedCard.getRank() == activeCard.getRank()) && activeCard.getRank() != 8) {
                         deck.addCardToDeck(activeCard); // add card back to deck
-                        //deck.displayDeck(); // debug
+                        userSelectedCard = activeHand.removeCard(num);
+                        activeCard = userSelectedCard;
                         counter--;
                     }
+//
+                    if (userSelectedCard.getSuit().equals(activeCard.getSuit()) && activeCard.getRank() == 8 && userSelectedCard.getRank() != 8) {
+                        activeHand.removeCard(num);
+                        activeCard = userSelectedCard;
+                        System.out.println("test case 1");
+                        counter--;
+                    }
+                    result2 = validCard();
+                    deck.displayDeck();
                     checkDeckSize(); // in the case no one is discarding cards. edge case
                     System.out.println(activeHand.getName() + " |" + " " + activeHand.displayHand() + " | ");
                     for (int i = 0; i < 4; i++) {
                         System.out.println();
                     }
                 } else {
-                    System.out.println("Thanks for playing!");
+                    System.out.println("You selected to quit. Thanks for playing!");
                     System.exit(0);
                 }
             } while (result2);
@@ -94,8 +108,8 @@ public class Table {
     }
 
     private boolean validCard() {
-        if (activeCard.getRank() == userSelectedCard.getRank() || activeCard.getSuit().equals(userSelectedCard.getSuit())) {
-            activeCard = userSelectedCard;
+        if (activeCard.getRank() == userSelectedCard.getRank() || activeCard.getSuit().equals(userSelectedCard.getSuit()) || crazyEightCard.getSuit().equals(userSelectedCard.getSuit())) {
+//            activeCard = userSelectedCard;
             return false;
         } else if (!Objects.equals(activeCard.getSuit(), userSelectedCard.getSuit())) {
             System.out.println("*******Invalid Card*******");
@@ -107,7 +121,7 @@ public class Table {
     }
 
     private void deal() {
-        for (int count = 0; count < 1; count++) {
+        for (int count = 0; count < 5; count++) {
             for (Hand activeHand : hands) {
                 activeHand.addCard(deck.draw());
                 counter--;
@@ -129,13 +143,62 @@ public class Table {
         }
         if (counter == 1) {
             deck.shuffle();
+            System.out.println("***********************A re-shuffle has happened.****************************");
         }
     }
 
-//    public int startingDeckSize() {
-//        return counter = deck.size();
-//    }
+    private void checkEights(Hand activeHand, int num) {
+        if (userSelectedCard.getRank() == 8) {
+            int newSuit = Console.getInt("Choose a suit:\n1. Clubs\n2. Spades\n3. Hearts\n4. Diamonds ", 1,
+                    4,
+                    "Invalid");
+            if (newSuit == 1) {
+                if (userSelectedCard.getSuit() == "u2667") {  //club
+                    activeCard = userSelectedCard;
+                    return;
+                }
+                activeCard = activeHand.removeCard(num);
+                deck.addCardToDeck(activeCard);
+                System.out.println(" 8\u2667");
+                crazyEightCard = new Card("\u2667", 8);
+                activeCard = crazyEightCard;
+            }
+            if (newSuit == 2) {
+                if (userSelectedCard.getSuit() == "u2664") { //spade
+                    activeCard = userSelectedCard;
+                    return;
+                }
+                activeCard = activeHand.removeCard(num);
+                deck.addCardToDeck(activeCard);
+                System.out.println(" 8\u2664");
+                crazyEightCard = new Card("\u2664", 8);
+                activeCard = crazyEightCard;
+            }
+            if (newSuit == 3) {
+                if (userSelectedCard.getSuit() == "u2665") { // heart
+                    activeCard = userSelectedCard;
+                    return;
+                }
+                activeCard = activeHand.removeCard(num);
+                deck.addCardToDeck(activeCard);
+                System.out.println(" 8\u2665");
+                crazyEightCard = new Card("\u2665", 8);
+                activeCard = crazyEightCard;
+            }
+            if (newSuit == 4) {
+                if (userSelectedCard.getSuit() == "u2666") { //diamonds
+                    activeCard = userSelectedCard;
+                    return;
+                }
+                activeCard = activeHand.removeCard(num);
+                deck.addCardToDeck(activeCard);
+                System.out.println(" 8\u2666");
+                crazyEightCard = new Card("\u2666", 8);
+                activeCard = crazyEightCard;
+            }
+        }
 
+    }
 }
 
 
