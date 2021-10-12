@@ -43,23 +43,18 @@ public class Table {
             boolean result2 = true;
             //deck.displayDeck();
             do {
-                System.out.println(activeHand.getName() + " |" + " " + activeHand.displayHand() + " | ");
-                if (activeCard.getRank() == 8 && crazyEightCard.getSuit() != activeCard.getSuit()) {
-                    System.out.println("Card in Play: " + crazyEightCard.display());
-                } else {
-                    System.out.println("Card in Play: " + activeCard.display());
-                }
+                cardInPlay(activeHand);
                 int result = activeHand.getAction(activeCard);
-                if (result == 1) {
+                if (result == 1) { //Draw?
                     counter--;
                     activeHand.addCard(deck.draw());
-                    checkDeckSize();
+                    checkDeckSize(); //Checking for shuffle or make sure deck still has cards.
                     System.out.println(activeHand.getName() + " " + "| " + activeHand.displayHand() + " | ");
-                    for (int i = 0; i < 3; i++) {
+                    for (int i = 0; i < 3; i++) { //print blank lines
                         System.out.println();
                     }
                     result2 = false;
-                } else if (result == 2) {
+                } else if (result == 2) { //Play a card?
                     int num;
                     num = Console.getInt("Select a card 1 through " + (activeHand.size()), 1,
                             activeHand.size(),
@@ -68,27 +63,15 @@ public class Table {
                                     "number");
                     num--;
                     userSelectedCard = activeHand.getCard(num);
-                    checkEights(activeHand, num);
-
-                    if ((userSelectedCard.getSuit().equals(activeCard.getSuit()) && activeCard.getRank() != 8) ||
-                            (userSelectedCard.getRank() == activeCard.getRank()) && activeCard.getRank() != 8) {
-                        deck.addCardToDeck(activeCard); // add card back to deck
-                        userSelectedCard = activeHand.removeCard(num);
-                        activeCard = userSelectedCard;
-                        counter--;
-                    }
-//
-                    if (userSelectedCard.getSuit().equals(activeCard.getSuit()) && activeCard.getRank() == 8 && userSelectedCard.getRank() != 8) {
-                        activeHand.removeCard(num);
-                        activeCard = userSelectedCard;
-                    }
+                    checkForEight(activeHand, num);
+                    removeHandCard(activeHand, num);
                     result2 = validCard();
                     checkDeckSize(); // in the case no one is discarding cards. edge case
                     System.out.println(activeHand.getName() + " |" + " " + activeHand.displayHand() + " | ");
                     for (int i = 0; i < 4; i++) {
                         System.out.println();
                     }
-                } else {
+                } else { // Quit
                     System.out.println("You selected to quit. Thanks for playing!");
                     System.exit(0);
                 }
@@ -100,6 +83,29 @@ public class Table {
             }
         }
         return true;
+    }
+
+    private void removeHandCard(Hand activeHand, int num){
+        if ((userSelectedCard.getSuit().equals(activeCard.getSuit()) && activeCard.getRank() != 8) ||
+                (userSelectedCard.getRank() == activeCard.getRank()) && activeCard.getRank() != 8) {
+            deck.addCardToDeck(activeCard); // add card back to deck
+            userSelectedCard = activeHand.removeCard(num);
+            activeCard = userSelectedCard;
+            counter--;
+        }
+        if (userSelectedCard.getSuit().equals(activeCard.getSuit()) && activeCard.getRank() == 8 && userSelectedCard.getRank() != 8) {
+            activeHand.removeCard(num);
+            activeCard = userSelectedCard;
+        }
+    }
+
+    private void cardInPlay(Hand activeHand){
+        System.out.println(activeHand.getName() + " |" + " " + activeHand.displayHand() + " | ");
+        if (activeCard.getRank() == 8 && crazyEightCard.getSuit() != activeCard.getSuit()) {
+            System.out.println("Card in Play: " + crazyEightCard.display());
+        } else {
+            System.out.println("Card in Play: " + activeCard.display());
+        }
     }
 
     private boolean validCard() {
@@ -146,7 +152,7 @@ public class Table {
         }
     }
 
-    private void checkEights(Hand activeHand, int num) {
+    private void checkForEight(Hand activeHand, int num) {
         if (userSelectedCard.getRank() == 8) {
             int newSuit = Console.getInt("Choose a suit:\n1. Clubs\n2. Spades\n3. Hearts\n4. Diamonds ", 1,
                     4,
