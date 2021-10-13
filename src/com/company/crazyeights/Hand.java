@@ -25,10 +25,6 @@ public class Hand {
         return output.toString().trim();
     }
 
-    public int getAction(Card activeCard) {
-        return player.getAction(activeCard, cards);
-    }
-
     public int size() {
         return cards.size();
     }
@@ -43,6 +39,14 @@ public class Hand {
 
     public Card getCard(int index){
         return cards.get(index);
+    }
+
+    public int getAction() {
+        return player.getAction();
+    }
+
+    int getAction(Hand activeHand){
+        return player.getAction(activeHand);
     }
 
 }

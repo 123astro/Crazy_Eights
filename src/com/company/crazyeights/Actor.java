@@ -8,6 +8,8 @@ public interface Actor {
 
     String getName();
 
-    int getAction(Card activeCard, List<Card> cards);
+    int getAction();
+
+    int getAction(Hand activeHand);
 
 }
