@@ -12,4 +12,6 @@ public interface Actor {
 
     int getAction(Hand activeHand);
 
+    int setSuit();
+
 }

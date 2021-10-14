@@ -41,12 +41,17 @@ public class Hand {
         return cards.get(index);
     }
 
-    public int getAction() {
+    public int getAction() {  // passthru to use the getAction in player.
         return player.getAction();
     }
 
-    int getAction(Hand activeHand){
+    public int getAction(Hand activeHand){
         return player.getAction(activeHand);
     }
+
+    public int setSuit(){
+      return player.setSuit();
+    }
+
 
 }
