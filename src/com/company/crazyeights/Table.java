@@ -55,11 +55,6 @@ public class Table {
                 if (result == 1) { //Draw?
                     counter--;
                     activeHand.addCard(deck.draw());
-                    checkDeckSize(); //Checking for shuffle or make sure deck still has cards.
-                    System.out.println(activeHand.getName() + " " + "| " + activeHand.displayHand() + " | ");
-                    for (int i = 0; i < 3; i++) { //print blank lines
-                        System.out.println();
-                    }
                     result2 = false;
                 } else if (result == 2) { //Play a card?
                     int num = activeHand.getAction(activeHand);
@@ -68,14 +63,14 @@ public class Table {
                     ifEight(activeHand, num);
                     removeHandCard(activeHand, num);
                     result2 = validCard();
-                    checkDeckSize(); // in the case no one is discarding cards. edge case
-                    System.out.println(activeHand.getName() + " |" + " " + activeHand.displayHand() + " | ");
-                    for (int i = 0; i < 4; i++) {
-                        System.out.println();
-                    }
                 } else { // Quit
                     System.out.println("You selected to quit. Thanks for playing!");
                     System.exit(0);
+                }
+                checkDeckSize(); // in the case no one is discarding cards. edge case
+                System.out.println(activeHand.getName() + " |" + " " + activeHand.displayHand() + " | ");
+                for (int i = 0; i < 3; i++) {
+                    System.out.println();
                 }
             } while (result2);
          isWinner(activeHand);
@@ -89,20 +84,19 @@ public class Table {
             System.exit(0);
         }
     }
+
     private void removeHandCard(Hand activeHand, int num) {
         if ((userSelectedCard.getSuit().equals(activeCard.getSuit()) && activeCard.getRank() != 8) ||
                 (userSelectedCard.getRank() == activeCard.getRank()) && activeCard.getRank() != 8) {
             deck.addCardToDeck(activeCard); // add card back to deck
             userSelectedCard = activeHand.removeCard(num);
             activeCard = userSelectedCard;
-            System.out.println("case 1");
             counter--;
         }
         if (userSelectedCard.getSuit().equals(activeCard.getSuit()) && activeCard.getRank() ==
                 8 && userSelectedCard.getRank() != 8) {
             activeHand.removeCard(num);
             activeCard = userSelectedCard;
-            System.out.println("case 2");
         }
     }
 
