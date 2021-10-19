@@ -1,5 +1,7 @@
 package com.company.crazyeights;
 
+
+import com.company.actor.AutoPlayer;
 import com.company.actor.Player;
 import com.company.deck.Card;
 import com.company.deck.Deck;
@@ -28,6 +30,8 @@ public class Table {
             Player newPlayer = new Player("Player" + (count + 1)); //create new player 1 thru 6
             hands.add(new Hand(newPlayer)); // instantiating a hand for the new player and adding to the list
         }
+        AutoPlayer autoPlayer = new AutoPlayer("Keith");
+        hands.add(new Hand(autoPlayer));
     }
 
     public void playGame() {
@@ -48,21 +52,21 @@ public class Table {
 
     private boolean turn() {
         for (Hand activeHand : hands) {
-            boolean result2 = true;
+            boolean ifTurn = true;
             do {
                 cardInPlay(activeHand);
                 int result = activeHand.getAction();
                 if (result == 1) { //Draw?
                     counter--;
                     activeHand.addCard(deck.draw());
-                    result2 = false;
+                    ifTurn = false;
                 } else if (result == 2) { //Play a card?
-                    int num = activeHand.getAction(activeHand);
+                    int num = activeHand.chooseCard(activeCard);
                     num--;
                     userSelectedCard = activeHand.getCard(num);
                     ifEight(activeHand, num);
                     removeHandCard(activeHand, num);
-                    result2 = validCard();
+                    ifTurn = validCard();
                 } else { // Quit
                     System.out.println("You selected to quit. Thanks for playing!");
                     System.exit(0);
@@ -72,8 +76,9 @@ public class Table {
                 for (int i = 0; i < 3; i++) {
                     System.out.println();
                 }
-            } while (result2);
-         isWinner(activeHand);
+            } while (ifTurn);
+            isWinner(activeHand);
+           // Console.getString("enter",false );
         }
         return true;
     }
@@ -161,6 +166,7 @@ public class Table {
             activeCard = crazyEightCard;
         }
     }
+
 }
 
 

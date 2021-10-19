@@ -10,8 +10,9 @@ public interface Actor {
 
     int getAction();
 
-    int getAction(Hand activeHand);
+    int chooseCard(List<Card> cards, Card activeCard);
 
-    int setSuit();
+    int setSuit(List<Card> cards);
+
 
 }

@@ -2,7 +2,10 @@ package com.company.actor;
 
 import com.company.crazyeights.Actor;
 import com.company.crazyeights.Hand;
+import com.company.deck.Card;
 import com.company.utils.Console;
+
+import java.util.List;
 
 public class Player implements Actor {
     private final String name;
@@ -10,6 +13,7 @@ public class Player implements Actor {
     public Player(String name) {
         this.name = name;
     }
+
 
 
     @Override
@@ -24,15 +28,15 @@ public class Player implements Actor {
     }
 
     @Override
-    public int getAction(Hand activeHand) {
-        return Console.getInt("Select a card 1 through " + (activeHand.size()), 1,
-                activeHand.size(),
+    public int chooseCard(List<Card> cards, Card activeCard) {
+        return Console.getInt("Select a card 1 through " + (cards.size()), 1,
+                cards.size(),
                 "Enter " +
                         "valid " +
                         "number");
     }
     @Override
-    public int setSuit() {
+    public int setSuit(List<Card> cards) {
             return Console.getInt("Choose a suit:\n1. Clubs\n2. Spades\n3. Hearts\n4. Diamonds ", 1,
                     4,
                     "Invalid");

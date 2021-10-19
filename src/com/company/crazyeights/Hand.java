@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Hand {
-    private List<Card> cards = new ArrayList<>();
+    private List<Card> cards = new ArrayList<>(); // cards are my hand
     private Actor player;
 
     public Hand(Actor player) {
@@ -45,12 +45,12 @@ public class Hand {
         return player.getAction();
     }
 
-    public int getAction(Hand activeHand){
-        return player.getAction(activeHand);
+    public int chooseCard(Card activeCard){
+        return player.chooseCard(cards,activeCard);
     }
 
     public int setSuit(){
-      return player.setSuit();
+      return player.setSuit(cards);
     }
 
 
